@@ -1,6 +1,10 @@
 LEX  = flex
-all:scan_numbers
-numbers.o: numbers.l
 
-scan_numbers: numbers.o
-    gcc numbers.o -o scan_numbers
+all: numbers
+
+numbers.c: numbers.l
+
+numbers.o: numbers.c
+
+numbers: numbers.o
+
