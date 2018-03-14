@@ -492,7 +492,25 @@ char *yytext;
 #line 5 "nano.l"
    int lineNumber =1;
    int colNumber = 0;
-#line 496 "<stdout>"
+
+   enum token
+   {
+        prog,
+        IDENT,
+        STRINGLIT,
+        INTLIT,
+        INTEGER, STRING,
+        IF, WHILE, RETURN, PRINT, ELSE,
+        EQ, NEQ, LT, GT, LEQ, GEQ,
+        PLUS, MINUS,
+        MULT, DIV,
+        UMINUS,
+        OPENPAR, CLOSEPAR,
+        SEMICOLON, COMA,
+        OPENCURLY, CLOSECURLY,
+        ERROR
+   };
+#line 514 "<stdout>"
 
 #define INITIAL 0
 
@@ -710,11 +728,11 @@ YY_DECL
 		}
 
 	{
-#line 41 "nano.l"
+#line 59 "nano.l"
 
 
 
-#line 718 "<stdout>"
+#line 736 "<stdout>"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -773,7 +791,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 44 "nano.l"
+#line 62 "nano.l"
 {
 
    printf(" %4d: %4d: INTVAL %s \n",lineNumber,colNumber,yytext);
@@ -782,7 +800,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 49 "nano.l"
+#line 67 "nano.l"
 {
    printf(" %4d: %4d: OPENPAR %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -790,7 +808,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 53 "nano.l"
+#line 71 "nano.l"
 {
    printf(" %4d: %4d: CLOSEPAR %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -798,7 +816,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 57 "nano.l"
+#line 75 "nano.l"
 {
    printf(" %4d: %4d: OPENCURLY %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -806,7 +824,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 61 "nano.l"
+#line 79 "nano.l"
 {
    printf(" %4d: %4d: CLOSECURLY %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -814,7 +832,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 65 "nano.l"
+#line 83 "nano.l"
 {
    printf(" %4d: %4d: RET %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -822,7 +840,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 70 "nano.l"
+#line 88 "nano.l"
 {
    printf(" %4d: %4d: PRINT %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -830,7 +848,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 75 "nano.l"
+#line 93 "nano.l"
 {
    printf(" %4d: %4d: SEMI %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -839,7 +857,7 @@ YY_RULE_SETUP
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 81 "nano.l"
+#line 99 "nano.l"
 {
    printf(" %4d: %4d: STRVAL %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -847,7 +865,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 86 "nano.l"
+#line 104 "nano.l"
 {
    printf(" %4d: %4d: STRING %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -855,7 +873,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 91 "nano.l"
+#line 109 "nano.l"
 {
    printf(" %4d: %4d: INT %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -863,7 +881,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 96 "nano.l"
+#line 114 "nano.l"
 {
    printf(" %4d: %4d: ID %s \n",lineNumber,colNumber,yytext);
    colNumber +=yyleng;
@@ -872,7 +890,7 @@ YY_RULE_SETUP
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 101 "nano.l"
+#line 119 "nano.l"
 {
     lineNumber++;
     colNumber =0;
@@ -880,17 +898,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 106 "nano.l"
+#line 124 "nano.l"
 {/* Skip */
     colNumber++;
  }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 109 "nano.l"
+#line 127 "nano.l"
 ECHO;
 	YY_BREAK
-#line 894 "<stdout>"
+#line 912 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1891,7 +1909,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 109 "nano.l"
+#line 127 "nano.l"
 
 
 

@@ -4,6 +4,24 @@
 %{
    int lineNumber =1;
    int colNumber = 0;
+
+   enum token
+   {
+        prog,
+        IDENT,
+        STRINGLIT,
+        INTLIT,
+        INTEGER, STRING,
+        IF, WHILE, RETURN, PRINT, ELSE,
+        EQ, NEQ, LT, GT, LEQ, GEQ,
+        PLUS, MINUS,
+        MULT, DIV,
+        UMINUS,
+        OPENPAR, CLOSEPAR,
+        SEMICOLON, COMA,
+        OPENCURLY, CLOSECURLY,
+        ERROR
+   };
 %}
 
 DIGIT   [0-9]
