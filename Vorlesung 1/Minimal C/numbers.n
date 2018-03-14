@@ -1,0 +1,7 @@
+12.3
+Reset
+Print
+14.2 15
+a
+51
+Print
