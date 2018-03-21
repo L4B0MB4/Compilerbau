@@ -205,7 +205,7 @@ int main( int argc, char **argv )
   yyparse();
    while((tok=yylex())!=EOFTOK)
    {
-      print_tok(tok, yylval);
+      //print_tok(tok, yylval);
       /* Our token variable has a strdup()ed string that we need to
          free() again - C is manually memory managed! */
       free(yylval.lexeme);

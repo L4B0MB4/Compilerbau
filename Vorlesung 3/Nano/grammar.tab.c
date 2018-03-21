@@ -73,7 +73,7 @@
 
    int yyerror(const char* err)
    {
-       printf("%s",err);
+       printf("%s \n",err);
        return 0;
    }
 
