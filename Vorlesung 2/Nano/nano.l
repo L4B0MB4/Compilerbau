@@ -2,6 +2,7 @@
 %option noyywrap
 
 %{
+    #include <stdio.h>
    int lineNumber =1;
    int colNumber = 0;
 

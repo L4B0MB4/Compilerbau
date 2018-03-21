@@ -1,4 +1,4 @@
-/*
+ /*
      nanoLang grammar
 
      Copyright 2017 by Stephan Schulz, schulz@eprover.org.
@@ -14,6 +14,12 @@
    extern int yyerror(const char* err);
    extern int yylex(void);
    extern FILE *yyin;
+
+   int yyerror(const char* err)
+   {
+       printf("%s",err);
+       return 0;
+   }
 %}
 
 %locations
