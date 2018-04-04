@@ -47,11 +47,11 @@
 %%
 
 prog: /* Nothing */
-    | prog def
+    | prog def 
 ;
 
 def: vardef
-   | fundef
+   |  fundef
 ;
 
 vardef: type idlist SEMICOLON
@@ -59,6 +59,7 @@ vardef: type idlist SEMICOLON
 
 idlist: IDENT
       | idlist COMA IDENT
+;
 
 fundef: type IDENT OPENPAR params CLOSEPAR body
 ;
@@ -150,3 +151,15 @@ arglist: expr
 
 
 %%
+
+
+int main( int argc, char **argv )
+{
+    ++argv, --argc;  /* skip over program name */
+    if ( argc > 0 )
+        yyin = fopen( argv[0], "r" );
+    else
+        yyin = stdin;
+    yyparse();
+
+}

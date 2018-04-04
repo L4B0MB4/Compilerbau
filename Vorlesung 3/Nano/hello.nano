@@ -5,6 +5,6 @@ String hello(Integer dummy)
 
 Integer main()
 {
-    print hello(2;
+    print hello(2);
     return 0;
 }

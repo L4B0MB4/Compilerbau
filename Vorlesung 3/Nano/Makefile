@@ -1,6 +1,6 @@
 # Set variables
 LEX  = flex
-YACC = bison
+YACC = bison --verbose
 CC   = gcc
 LD   = gcc
 CFLAGS = -ggdb -Wall -Wno-unused-label -Wno-unused-function
@@ -20,7 +20,7 @@ grammar.tab.h: grammar.y
 grammar.tab.c: grammar.y
 	$(YACC) -d grammar.y
 
-nanolex_int.c: nanolex_int.l  nanolex_drv.h grammar.tab.h
+nanolex_int.c: nanolex_int.l grammar.tab.h
 
 grammar.tab.o: grammar.tab.c
 

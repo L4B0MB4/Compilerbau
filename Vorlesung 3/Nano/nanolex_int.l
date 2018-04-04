@@ -17,10 +17,11 @@
 %option yylineno
 
 %{
+#include <stdlib.h>
 #include <string.h>
 
    /* Token definitions come from nanolex_drv.h. */
-#include "nanolex_drv.h"
+#include "grammar.tab.h"
 
 
 int yycol = 0;
@@ -29,9 +30,9 @@ int yycol = 0;
    * matched, and before the rule-specific body is executed. Here, we
    * use the same action for every toke: Fill the TokCell, update
    * yycol. Only the returned token value is different for each token. */
-#define YY_USER_ACTION \
+/*#define YY_USER_ACTION \
    {yylval.line = yylineno; yylval.col=yycol; yylval.lexeme=strdup(yytext);yycol += yyleng;}
-
+*/
 %}
 
 
@@ -77,12 +78,12 @@ print   {return PRINT;}
 {DIGIT}+        {return INTLIT;}
 
 
-#[^\n]* { /* Eat comments */}
+#[^\n]* { /* Eat comments */;}
 
 
 [\n]    {yycol = 0;}
 
-[\r\t ] { /* Skip  whitespace*/ }
+[\r\t ] {/* Skip  whitespace*/ }
 
 
  /* Everything else is an invalid character. */
@@ -91,8 +92,6 @@ print   {return PRINT;}
 %%
 
 
-#include <stdlib.h>
-#include "nanolex_drv.h"
 
 /*---------------------------------------------------------------------*/
 /*                        Global Variables                             */
@@ -167,18 +166,6 @@ YYSTYPE yylval;
 //
 /----------------------------------------------------------------------*/
 
-void print_tok(int tok, TokenCell curtok)
-{
-   printf("<%5d:%3d: %s[%d]=\"%s\">\n",
-          curtok.line,
-          curtok.col,
-          tokname[tok],
-          tok,
-          curtok.lexeme);
-}
-
-
-
 /*-----------------------------------------------------------------------
 //
 // Function: main()
@@ -192,22 +179,3 @@ void print_tok(int tok, TokenCell curtok)
 //
 /----------------------------------------------------------------------*/
 
-
-int main( int argc, char **argv )
-{
-   int tok;
-
-   ++argv, --argc;  /* skip over program name */
-   if ( argc > 0 )
-      yyin = fopen( argv[0], "r" );
-   else
-      yyin = stdin;
-  yyparse();
-   while((tok=yylex())!=EOFTOK)
-   {
-      //print_tok(tok, yylval);
-      /* Our token variable has a strdup()ed string that we need to
-         free() again - C is manually memory managed! */
-      free(yylval.lexeme);
-   }
-}
