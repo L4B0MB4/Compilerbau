@@ -1,0 +1,4 @@
+Integer main()
+{
+    return -a+b*(c+d);
+}
