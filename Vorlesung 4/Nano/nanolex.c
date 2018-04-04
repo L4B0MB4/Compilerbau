@@ -957,7 +957,7 @@ YY_RULE_SETUP
 case 23:
 YY_RULE_SETUP
 #line 72 "nanolex.l"
-{return IDENT;}
+{yylval->type = t_IDENT;return IDENT;}
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */

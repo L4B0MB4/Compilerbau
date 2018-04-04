@@ -69,7 +69,7 @@ while   {return WHILE;}
 return  {return RETURN;}
 print   {return PRINT;}
 
-{ALPHA}{ALNUM}* {return IDENT;}
+{ALPHA}{ALNUM}* {yylval->type = t_IDENT;return IDENT;}
 
 \"[^"]*\"       {return STRINGLIT;}
 

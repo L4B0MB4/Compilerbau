@@ -52,49 +52,52 @@
 %%
 start: prog {$$=$1; ast=$1;}
 
-prog: /* Nothing */
-    | prog def 
+prog: /* Nothing */ {$$=ASTEmptyAlloc();}
+    | prog def  {$$=ASTAlloc2(prog, NULL, 0, $1, $2);}
 ;
 
-def: vardef
-   |  fundef
+def: vardef {$$=ASTAlloc2(def, NULL, 0, $1, NULL);}
+   |  fundef  {$$=ASTAlloc2(def, NULL, 0, $1, NULL);}
 ;
 
 vardef: type idlist SEMICOLON
+ {$$ = ASTAlloc2(vardef,NULL,0,$1,$2); ASTFree($3);}
 ;
 
-idlist: IDENT
-      | idlist COMA IDENT
+idlist: IDENT {$$ = $1;}
+      | idlist COMA IDENT {$$ = ASTAlloc2(idlist,NULL,0,$1,$3); ASTFree($2);}
 ;
 
 fundef: type IDENT OPENPAR params CLOSEPAR body
+        {$$ = ASTAlloc(fundef,NULL,0,$1,$2,$4,$6); ASTFree($3);ASTFree($5);}
 ;
 
-type: STRING
-    | INTEGER
+type: STRING {$$ = ASTAlloc2(t_STRING,NULL,0,$1,NULL);}
+    | INTEGER {$$ = ASTAlloc2(t_INTEGER,NULL,0,$1,NULL);}
 ;
 
-params: /* empty */
-      | paramlist
+params: /* empty */ {$$ = ASTEmptyAlloc();}
+      | paramlist {$$ = ASTAlloc2(params,NULL,0,$1,NULL);}
 ;
 
-paramlist: param
+paramlist: param {$$ = ASTAlloc2(paramlist,NULL,0,$1,NULL);}
          | paramlist COMA param
 ;
 
-param: type IDENT
+param: type IDENT {$$ = ASTAlloc2(param,NULL,0,$1,$2);}
 ;
 
 body: OPENCURLY vardefs stmts CLOSECURLY
+    {$$ = ASTAlloc2(body,NULL,0,$2,$3); ASTFree($1);ASTFree($4);}
 ;
 
-vardefs: /* empty */
-       | vardefs vardef
+vardefs: /* empty */ {$$ =ASTEmptyAlloc();}
+       | vardefs vardef {$$=ASTAlloc2(vardefs,NULL,0,$1,$2);}
 ;
 
 
-stmts: /* empty */
-     | stmts stmt
+stmts: /* empty */ {$$ =ASTEmptyAlloc();}
+     | stmts stmt {$$=ASTAlloc2(stmts,NULL,0,$1,$2);}
 ;
 
 stmt: while_stmt

@@ -1,3 +1,10 @@
+String hello(Integer dummy)
+{
+    Integer x ;
+    x=4;
+    return "Hello World\n";
+}
+
 Integer main()
 {
     return 0;
