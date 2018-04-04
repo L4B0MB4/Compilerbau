@@ -20,7 +20,7 @@ grammar.tab.h: grammar.y
 grammar.tab.c: grammar.y
 	$(YACC) -d grammar.y
 
-nanolex_int.c: nanolex_int.l grammar.tab.h
+nanolex_int.c: nanoalex_int.l grammar.tab.h
 
 grammar.tab.o: grammar.tab.c
 
