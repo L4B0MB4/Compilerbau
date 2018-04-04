@@ -1,4 +1,1 @@
-Integer main()
-{
-    return -a+b*(c+d);
-}
+-a+b*(c+d)

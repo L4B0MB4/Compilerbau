@@ -46,10 +46,10 @@ ID         {ALPHA}{ALNUM}*
 
 "("  {return OPENPAR;}
 ")"  {return CLOSEPAR;}
-"*"  {return MULT;}
-"/"  {return DIV;}
-"+"  {return PLUS;}
-"-"  {return MINUS;}
+"*"  {yylval->type = t_MULT; return MULT;}
+"/"  {yylval->type = t_DIV; return DIV;}
+"+"  {yylval->type = t_PLUS; return PLUS;}
+"-"  {yylval->type = t_MINUS; return MINUS;}
 "="  {return EQ;}
 "!=" {return NEQ;}
 ">"  {return GT;}

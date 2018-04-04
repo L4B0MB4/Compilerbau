@@ -857,22 +857,22 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 49 "nanolex.l"
-{return MULT;}
+{yylval->type = t_MULT; return MULT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 50 "nanolex.l"
-{return DIV;}
+{yylval->type = t_DIV; return DIV;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 51 "nanolex.l"
-{return PLUS;}
+{yylval->type = t_PLUS; return PLUS;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 52 "nanolex.l"
-{return MINUS;}
+{yylval->type = t_MINUS; return MINUS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP

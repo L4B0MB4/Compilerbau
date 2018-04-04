@@ -31,7 +31,7 @@
 %define api.value.type {AST_p}
 
 
-%start prog
+%start start
 
 %token IDENT
 %token STRINGLIT
@@ -50,6 +50,7 @@
 
 
 %%
+start: prog {$$=$1; ast=$1;}
 
 prog: /* Nothing */
     | prog def 
