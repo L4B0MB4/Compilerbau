@@ -52,7 +52,7 @@
 %%
 start: prog {$$=$1; ast=$1;}
 
-prog: /* Nothing */ {$$ = ASTAlloc2(prog,NULL,0,NULL,NULL);}
+prog: /* Nothing */ {$$ = ASTEmptyAlloc();}
     | prog def  {$$=ASTAlloc2(prog, NULL, 0, $1, $2);}
 ;
 
