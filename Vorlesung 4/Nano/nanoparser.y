@@ -98,7 +98,7 @@ vardefs: /* empty */ {$$=ASTEmptyAlloc();}
 
 
 stmts: /* empty */  {$$=ASTEmptyAlloc();}
-     | stmts stmt {$$=ASTAlloc2(stmt,NULL,0,$1,$2);}
+     | stmts stmt {$$=ASTAlloc2(stmts,NULL,0,$1,$2);}
 ;
 
 stmt: while_stmt {$$=$1;}
