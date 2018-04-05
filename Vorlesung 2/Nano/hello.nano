@@ -1,10 +1,7 @@
-String hello(Integer dummy)
+String hello()
 {
-    return "Hello World\n";
-}
-
-Integer main()
-{
-    print hello(2);
-    return 0;
+    while(1=2)
+    {
+        return 0;
+    }
 }

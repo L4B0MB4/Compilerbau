@@ -52,12 +52,12 @@
 %%
 start: prog {$$=$1; ast=$1;}
 
-prog: /* Nothing */ {$$=ASTEmptyAlloc();}
+prog: /* Nothing */ {$$ = ASTAlloc2(prog,NULL,0,NULL,NULL);}
     | prog def  {$$=ASTAlloc2(prog, NULL, 0, $1, $2);}
 ;
 
-def: vardef {$$=ASTAlloc2(def, NULL, 0, $1, NULL);}
-   |  fundef  {$$=ASTAlloc2(def, NULL, 0, $1, NULL);}
+def: vardef {$$=$1;}
+   |  fundef  {$$=$1;}
 ;
 
 vardef: type idlist SEMICOLON
@@ -65,23 +65,24 @@ vardef: type idlist SEMICOLON
 ;
 
 idlist: IDENT {$$ = $1;}
-      | idlist COMA IDENT {$$ = ASTAlloc2(idlist,NULL,0,$1,$3); ASTFree($2);}
+      | idlist COMA IDENT
+      {$$ = ASTAlloc2(idlist,NULL,0,$1,NULL); ASTFree($2);ASTFree($3);}
 ;
 
 fundef: type IDENT OPENPAR params CLOSEPAR body
-        {$$ = ASTAlloc(fundef,NULL,0,$1,$2,$4,$6); ASTFree($3);ASTFree($5);}
+        {$$ = ASTAlloc(fundef,NULL,0,$1,$2,$4, $6);ASTFree($3);ASTFree($5);}
 ;
 
-type: STRING {$$ = ASTAlloc2(t_STRING,NULL,0,$1,NULL);}
-    | INTEGER {$$ = ASTAlloc2(t_INTEGER,NULL,0,$1,NULL);}
+type: STRING {$$ = $1;}
+    | INTEGER {$$ =$1;}
 ;
 
-params: /* empty */ {$$ = ASTEmptyAlloc();}
+params: /* empty */ {$$ = ASTAlloc2(params,NULL,0,NULL,NULL);}
       | paramlist {$$ = ASTAlloc2(params,NULL,0,$1,NULL);}
 ;
 
-paramlist: param {$$ = ASTAlloc2(paramlist,NULL,0,$1,NULL);}
-         | paramlist COMA param
+paramlist: param {$$ = $1;}
+         | paramlist COMA param {$$ = ASTAlloc2(paramlist,NULL,0,$1,$3); ASTFree($2);}
 ;
 
 param: type IDENT {$$ = ASTAlloc2(param,NULL,0,$1,$2);}
@@ -91,51 +92,59 @@ body: OPENCURLY vardefs stmts CLOSECURLY
     {$$ = ASTAlloc2(body,NULL,0,$2,$3); ASTFree($1);ASTFree($4);}
 ;
 
-vardefs: /* empty */ {$$ =ASTEmptyAlloc();}
+vardefs: /* empty */ {$$=ASTEmptyAlloc();}
        | vardefs vardef {$$=ASTAlloc2(vardefs,NULL,0,$1,$2);}
 ;
 
 
-stmts: /* empty */ {$$ =ASTEmptyAlloc();}
-     | stmts stmt {$$=ASTAlloc2(stmts,NULL,0,$1,$2);}
+stmts: /* empty */  {$$=ASTEmptyAlloc();}
+     | stmts stmt {$$=ASTAlloc2(stmt,NULL,0,$1,$2);}
 ;
 
-stmt: while_stmt
-    | if_stmt
-    | ret_stmt
-    | print_stmt
-    | assign
-    | funcall_stmt
+stmt: while_stmt {$$=$1;}
+    | if_stmt   {$$=$1;}
+    | ret_stmt {$$=$1;}
+    | print_stmt {$$=$1;}
+    | assign {$$=$1;}
+    | funcall_stmt {$$=$1;}
 ;
 
 while_stmt: WHILE OPENPAR boolexpr CLOSEPAR body
+    {$$=ASTAlloc2(while_stmt,NULL,0,$3,$5); ASTFree($1);ASTFree($2);ASTFree($4);}
 ;
 
-if_stmt: IF OPENPAR boolexpr CLOSEPAR body
-       | IF OPENPAR boolexpr CLOSEPAR body ELSE body
+if_stmt: IF OPENPAR boolexpr CLOSEPAR body {$$=ASTAlloc2(if_stmt,NULL,0,$3,$5); ASTFree($1);ASTFree($2);ASTFree($4);}
+       | IF OPENPAR boolexpr CLOSEPAR body ELSE body {$$=ASTAlloc(if_stmt,NULL,0,$3,$5,$7, NULL); ASTFree($1);ASTFree($2);ASTFree($4);ASTFree($6);}
 ;
 
-ret_stmt: RETURN expr SEMICOLON
+ret_stmt: RETURN expr SEMICOLON 
+{$$=ASTAlloc2(ret_stmt,NULL,0,$2,NULL); ASTFree($1);ASTFree($3);}
 ;
 
 print_stmt: PRINT expr SEMICOLON
+{$$=ASTAlloc2(print_stmt,NULL,0,$2,NULL); ASTFree($1);ASTFree($3);}
+
 ;
 
 assign: IDENT EQ expr SEMICOLON
+{$$=ASTAlloc2(assign,NULL,0,$3,NULL); ASTFree($1);ASTFree($2);ASTFree($4);}
+
 ;
 
 funcall_stmt: funcall SEMICOLON
+{$$=ASTAlloc2(funcall_stmt,NULL,0,$1,NULL);ASTFree($2);}
+
 ;
 
-boolexpr: expr EQ expr
-        | expr NEQ expr
-        | expr LT expr
-        | expr GT expr
-        | expr LEQ expr
-        | expr GEQ expr
+boolexpr: expr EQ expr {$$=ASTAlloc2(t_EQ,NULL,0,$1,$3);ASTFree($2);}
+        | expr NEQ expr {$$=ASTAlloc2(t_NEQ,NULL,0,$1,$3);ASTFree($2);}
+        | expr LT expr {$$=ASTAlloc2(t_LT,NULL,0,$1,$3);ASTFree($2);}
+        | expr GT expr {$$=ASTAlloc2(t_GT,NULL,0,$1,$3);ASTFree($2);}
+        | expr LEQ expr {$$=ASTAlloc2(t_LEQ,NULL,0,$1,$3);ASTFree($2);}
+        | expr GEQ expr {$$=ASTAlloc2(t_GEQ,NULL,0,$1,$3);ASTFree($2);}
 ;
 
-expr: funcall
+expr: funcall {$$=$1;}
     | INTLIT  {$$ = $1;}
     | IDENT   {$$ = $1;}
     | STRINGLIT {$$ = $1;}
@@ -147,15 +156,15 @@ expr: funcall
     | MINUS expr %prec UMINUS {$$=ASTAlloc2(t_MINUS, NULL, 0, $2, NULL);ASTFree($1);}
 ;
 
-funcall: IDENT OPENPAR args CLOSEPAR
+funcall: IDENT OPENPAR args CLOSEPAR {$$=ASTAlloc2(funcall,NULL,0,$1,$3);ASTFree($2);ASTFree($4);}
 ;
 
-args: /* empty */
-    | arglist
+args: /* empty */  {$$ = ASTEmptyAlloc();}
+    | arglist {$$=$1;}
 ;
 
-arglist: expr
-       | arglist COMA expr
+arglist: expr {$$=ASTAlloc2(arglist,NULL,0,$1,NULL);}
+       | arglist COMA expr {$$=ASTAlloc2(args,NULL,0,$1,$3); ASTFree($2);}
 ;
 
 

@@ -50,20 +50,20 @@ ID         {ALPHA}{ALNUM}*
 "/"  {yylval->type = t_DIV; return DIV;}
 "+"  {yylval->type = t_PLUS; return PLUS;}
 "-"  {yylval->type = t_MINUS; return MINUS;}
-"="  {return EQ;}
-"!=" {return NEQ;}
-">"  {return GT;}
-"<"  {return LT;}
-">=" {return GEQ;}
-"<=" {return LEQ;}
+"="  {yylval->type = t_EQ;return EQ;}
+"!=" {yylval->type = t_NEQ;return NEQ;}
+">"  {yylval->type = t_GT;return GT;}
+"<"  {yylval->type = t_LT;return LT;}
+">=" {yylval->type = t_GEQ;return GEQ;}
+"<=" {yylval->type = t_LEQ;return LEQ;}
 "{"  {return OPENCURLY;}
 "}"  {return CLOSECURLY;}
 ";"  {return SEMICOLON;}
 ","  {return COMA;}
 
 
-Integer {return INTEGER;}
-String  {return STRING;}
+Integer {yylval->type = t_INTEGER;return INTEGER;}
+String  {yylval->type = t_STRING;return STRING;}
 if      {return IF;}
 while   {return WHILE;}
 return  {return RETURN;}
@@ -71,9 +71,9 @@ print   {return PRINT;}
 
 {ALPHA}{ALNUM}* {yylval->type = t_IDENT;return IDENT;}
 
-\"[^"]*\"       {return STRINGLIT;}
+\"[^"]*\"       {yylval-> type = t_STRINGLIT;return STRINGLIT;}
 
-{DIGIT}+        {return INTLIT;}
+{DIGIT}+        {yylval->type = t_INTLIT;return INTLIT;}
 
 
 #[^\n]* { /* Eat comments */;}

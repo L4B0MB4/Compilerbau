@@ -877,32 +877,32 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 53 "nanolex.l"
-{return EQ;}
+{yylval->type = t_EQ;return EQ;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 54 "nanolex.l"
-{return NEQ;}
+{yylval->type = t_NEQ;return NEQ;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 55 "nanolex.l"
-{return GT;}
+{yylval->type = t_GT;return GT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 56 "nanolex.l"
-{return LT;}
+{yylval->type = t_LT;return LT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 57 "nanolex.l"
-{return GEQ;}
+{yylval->type = t_GEQ;return GEQ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 58 "nanolex.l"
-{return LEQ;}
+{yylval->type = t_LEQ;return LEQ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
@@ -927,12 +927,12 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 65 "nanolex.l"
-{return INTEGER;}
+{yylval->type = t_INTEGER;return INTEGER;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 66 "nanolex.l"
-{return STRING;}
+{yylval->type = t_STRING;return STRING;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -963,12 +963,12 @@ case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
 #line 74 "nanolex.l"
-{return STRINGLIT;}
+{yylval-> type = t_STRINGLIT;return STRINGLIT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 76 "nanolex.l"
-{return INTLIT;}
+{yylval->type = t_INTLIT;return INTLIT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
