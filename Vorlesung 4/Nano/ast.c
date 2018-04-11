@@ -77,9 +77,7 @@ char* ast_name[] =
    "t_WHILE",
    "t_RETURN",
    "t_PRINT",
-   "t_dummy",
-   "t_ELSE",
-   "idlist"
+   "t_dummy"
 };
 
 /*---------------------------------------------------------------------*/
@@ -318,6 +316,8 @@ void ExprASTPrint(FILE* out, AST_p ast)
 {
    switch(ast->type)
    {
+         case t_INTEGER:
+         case t_STRING:
    case t_STRINGLIT:
    case t_IDENT:
    case t_INTLIT:
@@ -345,6 +345,27 @@ void ExprASTPrint(FILE* out, AST_p ast)
          ExprASTPrint(out, ast->child[1]);
          fprintf(out, ")");
          break;
+   case t_LT:
+         fprintf(out, "(");
+         ExprASTPrint(out, ast->child[0]);
+         fprintf(out, "<");
+         ExprASTPrint(out, ast->child[1]);
+         fprintf(out, ")");
+         break;
+   case t_GT:
+         fprintf(out, "(");
+         ExprASTPrint(out, ast->child[0]);
+         fprintf(out, ">");
+         ExprASTPrint(out, ast->child[1]);
+         fprintf(out, ")");
+         break;
+   case t_EQ:
+         fprintf(out, "(");
+         ExprASTPrint(out, ast->child[0]);
+         fprintf(out, "=");
+         ExprASTPrint(out, ast->child[1]);
+         fprintf(out, ")");
+         break;
    case t_MINUS:
          if(ast->child[1]) /* Binary minus */
          {
@@ -360,8 +381,175 @@ void ExprASTPrint(FILE* out, AST_p ast)
             ExprASTPrint(out, ast->child[0]);
          }
          break;
+      case prog:
+      if(ast->child[0])
+      {
+            if(ast->child[1])
+            {
+                  fprintf(out, "(\n");
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, ",");
+                  ExprASTPrint(out, ast->child[1]);
+                  fprintf(out, "\n)"); 
+            }
+            else if(ast->child[0]){ 
+                  ExprASTPrint(out, ast->child[0]); 
+            }
+      }
+            break;
+      case fundef:
+            fprintf(out, "(");
+            ExprASTPrint(out, ast->child[0]);
+            fprintf(out, " ");
+            ExprASTPrint(out, ast->child[1]);
+            fprintf(out, ",");
+            ExprASTPrint(out, ast->child[2]);
+            fprintf(out, ",");
+            ExprASTPrint(out, ast->child[3]);
+            fprintf(out, ")\n");
+            break;
+      case params:
+            if(ast->child[0])
+            {
+                  ExprASTPrint(out, ast->child[0]);
+            }
+            break;
+      case paramlist:
+            if(ast->child[1])
+            {
+                  fprintf(out, "(");
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, ",");
+                  ExprASTPrint(out, ast->child[1]);
+                  fprintf(out, ")");
+            }
+            else{
+                  ExprASTPrint(out, ast->child[0]);
+            }
+            break;
+      case param:
+            fprintf(out, "(");
+            ExprASTPrint(out, ast->child[0]);
+            fprintf(out, " ");
+            ExprASTPrint(out, ast->child[1]);
+            fprintf(out, ")");
+            break;
+      case body:
+            fprintf(out, "(");
+            ExprASTPrint(out, ast->child[0]);
+            fprintf(out, " ");
+            ExprASTPrint(out, ast->child[1]);
+            fprintf(out, "\n)");
+            break;
+      case stmts:
+            if(ast->child[0])
+            {
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, "\n");
+                  ExprASTPrint(out, ast->child[1]);
+            }
+            break;
+      case vardefs:
+            if(ast->child[0])
+            {
+                  fprintf(out, "(");
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, " ");
+                  ExprASTPrint(out, ast->child[1]);
+                  fprintf(out, ")");
+            }
+            break;
+      case vardef:
+            if(ast->child[0])
+            {
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, " ");
+                  ExprASTPrint(out, ast->child[1]);
+                  fprintf(out, ";");
+            }
+            break;
+      case idlist:
+            if(ast->child[1])
+            {
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, ",");
+                  ExprASTPrint(out, ast->child[1]);
+            }
+            else{
+                  ExprASTPrint(out, ast->child[0]);
+            }
+            break;
+      case assign:
+                  ExprASTPrint(out, ast->child[0]);
+                  fprintf(out, "=");
+                  ExprASTPrint(out, ast->child[1]);
+            break;
+      case while_stmt:
+                  fprintf(out,"while");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out, "\n");
+                  ExprASTPrint(out, ast->child[1]);
+            break;
+      case if_stmt:
+                  fprintf(out,"if");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out, "\n");
+                  ExprASTPrint(out, ast->child[1]);
+            break;
+      case else_stmt:
+                  fprintf(out,"else");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out, "\n");
+                  ExprASTPrint(out, ast->child[1]);
+            break;
+      case ret_stmt:
+                  fprintf(out,"return ");
+                  fprintf(out,"(");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out,")");
+            break;
+      case print_stmt:
+                  fprintf(out,"print ");
+                  fprintf(out,"(");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out,")");
+            break; 
+      case funcall_stmt:
+            fprintf(out,"function call");
+            fprintf(out,"(");
+            ExprASTPrint(out, ast->child[0]); 
+            fprintf(out,")");
+            break; 
+      case funcall: 
+            ExprASTPrint(out, ast->child[0]); 
+            fprintf(out,"(");
+            ExprASTPrint(out, ast->child[1]); 
+            fprintf(out,")");
+            break;
+      case args:
+            if(ast->child[0])
+            ExprASTPrint(out, ast->child[0]); 
+            break;
+      case arglist:
+            if(ast->child[1])
+            {
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out,",");
+                  ExprASTPrint(out, ast->child[1]); 
+
+            }
+            else
+                  ExprASTPrint(out, ast->child[0]); 
+            break;
+      case boolexpr:
+                  fprintf(out,"(");
+                  ExprASTPrint(out, ast->child[0]); 
+                  fprintf(out,")");
+            break;
+      case nil:
+            break;
    default:
-         fprintf(out, "Unexpected construct!\n");
+         fprintf(out, "Unexpected construct! %s",ast_name[ast->type]);
          break;
    }
 }

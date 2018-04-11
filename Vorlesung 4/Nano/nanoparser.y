@@ -52,7 +52,7 @@
 %%
 start: prog {$$=$1; ast=$1;}
 
-prog: /* Nothing */ {$$ = ASTEmptyAlloc();}
+prog: /* Nothing */ {$$=ASTAlloc2(prog, NULL, 0, NULL,NULL);}
     | prog def  {$$=ASTAlloc2(prog, NULL, 0, $1, $2);}
 ;
 
@@ -70,7 +70,7 @@ idlist: IDENT {$$ = $1;}
 ;
 
 fundef: type IDENT OPENPAR params CLOSEPAR body
-        {$$ = ASTAlloc(fundef,NULL,0,$1,$2,$4, $6);ASTFree($3);ASTFree($5);}
+        {$$ = ASTAlloc(fundef,NULL,0,$1,$2,$4,$6);ASTFree($3);ASTFree($5);}
 ;
 
 type: STRING {$$ = $1;}
@@ -127,7 +127,7 @@ print_stmt: PRINT expr SEMICOLON
 ;
 
 assign: IDENT EQ expr SEMICOLON
-{$$=ASTAlloc2(assign,NULL,0,$3,NULL); ASTFree($1);ASTFree($2);ASTFree($4);}
+{$$=ASTAlloc2(assign,NULL,0,$1,$3);ASTFree($2);ASTFree($4);}
 
 ;
 
