@@ -258,12 +258,11 @@ void DOTASTNodePrint(FILE* out, AST_p ast)
    case t_STRINGLIT:
          fprintf(out, "   ast%ld [label=%s]\n",
                  ast->nodectr,
-                 //ast_name[ast->type],
                  ast->litval);
          break;
    case t_IDENT:
    case t_INTLIT:
-         fprintf(out, "   ast%ld [label=\"%s\\n%s\"]\n",
+         fprintf(out, "   ast%ld [label=\"%s \\n %s \"]\n",
                  ast->nodectr,
                  ast_name[ast->type],
                  ast->litval);

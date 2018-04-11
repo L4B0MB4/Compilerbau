@@ -66,7 +66,7 @@ vardef: type idlist SEMICOLON
 
 idlist: IDENT {$$ = $1;}
       | idlist COMA IDENT
-      {$$ = ASTAlloc2(idlist,NULL,0,$1,NULL); ASTFree($2);ASTFree($3);}
+      {$$ = ASTAlloc2(idlist,NULL,0,$1,$3); ASTFree($2);}
 ;
 
 fundef: type IDENT OPENPAR params CLOSEPAR body

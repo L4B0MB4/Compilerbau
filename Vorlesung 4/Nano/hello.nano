@@ -1,6 +1,6 @@
 Integer hello(Integer repeat, String message)
 {
-    Integer i;
+    Integer i,a;
     i=0;
     while(i<repeat)
     {
