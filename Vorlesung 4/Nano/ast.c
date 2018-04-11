@@ -262,7 +262,7 @@ void DOTASTNodePrint(FILE* out, AST_p ast)
          break;
    case t_IDENT:
    case t_INTLIT:
-         fprintf(out, "   ast%ld [label=\"%s \\n %s \"]\n",
+         fprintf(out, "   ast%ld [label=\"%s  %s \"]\n",
                  ast->nodectr,
                  ast_name[ast->type],
                  ast->litval);
@@ -381,20 +381,14 @@ void ExprASTPrint(FILE* out, AST_p ast)
          }
          break;
       case prog:
-      if(ast->child[0])
-      {
             if(ast->child[1])
             {
-                  fprintf(out, "(\n");
+                  fprintf(out, "(");
                   ExprASTPrint(out, ast->child[0]);
                   fprintf(out, ",");
                   ExprASTPrint(out, ast->child[1]);
-                  fprintf(out, "\n)"); 
+                  fprintf(out, ")"); 
             }
-            else if(ast->child[0]){ 
-                  ExprASTPrint(out, ast->child[0]); 
-            }
-      }
             break;
       case fundef:
             fprintf(out, "(");
