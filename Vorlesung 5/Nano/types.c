@@ -3,7 +3,7 @@
 #include "types.h"
 
 
-char* atomic_type_names[] =
+char* possible_atomic_types[] =
 {
    "NoType",
    "String",
@@ -46,10 +46,10 @@ void TypePrint(FILE* out, TypeTable_p table, TypeIndex type)
    switch(table->types[type].constructor)
    {
    case tc_atomic:
-         fprintf(out, "%s", atomic_type_names[type]);
+         fprintf(out, " ATOMIC! %s", possible_atomic_types[type]);
          break;
    case tc_function:
-         fprintf(out, "(");
+         fprintf(out, "FUNCTION! (");
          for(i=1; i < table->types[type].typeargno; i++)
          {
             fprintf(out, "%s", sep);
@@ -60,26 +60,23 @@ void TypePrint(FILE* out, TypeTable_p table, TypeIndex type)
          TypePrint(out, table, table->types[type].typeargs[0]);
          break;
    default:
-         printf("Error, unknown type constructor!\n");
+         printf("Oups unkown constructor!\n");
          break;
    }
 }
 
 
+// Inserts atomic types
 void TypeTableInit(TypeTable_p table)
 {
    NanoTypeCell type;
 
    table->type_ctr=0;
 
-   /* Insert dummy no-type */
    type.constructor = tc_atomic;
    type.typeargno   = 1;
    type.typeargs[0] = T_NoType;
    TypeTableInsert(table, &type);
-
-   /* Insert atomoic types - note that constructor and argno are
-    * still set from above. */
    type.typeargs[0] = T_String;
    TypeTableInsert(table, &type);
 
@@ -121,7 +118,7 @@ TypeIndex TypeTableInsert(TypeTable_p table, NanoType_p type)
 {
    if(table->type_ctr==MAXTYPES)
    {
-      fprintf(stderr, "Type table overflow: Out of types!\n");
+      fprintf(stderr, "Tooooooooo many types >.< !\n");
       exit(EXIT_FAILURE);
    }
    table->types[table->type_ctr] = *type;
@@ -147,7 +144,6 @@ TypeIndex TypeTableGetTypeIndex(TypeTable_p table, NanoType_p type)
 
 TypeIndex TypeTableGetRetType(TypeTable_p table, TypeIndex type)
 {
-   assert((type>0) && (type<table->type_ctr));
 
    return TypeRetType(&(table->types[type]));
 }

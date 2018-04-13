@@ -100,15 +100,13 @@ bool STInsertSymbol(SymbolTable_p table, char* symbol, TypeIndex type,
    handle = STFindSymbolLocal(table, symbol);
    if(handle)
    {
-      printf("%d:%d: error: symbol '%s' doubly defined (previous "
-             "definition at %d:%d)\n",
-             line, col, symbol, handle->line, handle->col);
-      // exit(EXIT_FAILURE);
+      printf("%d:%d: Oups: symbol '%s' doubly defined )\n",
+             line, col, symbol);
       return false;
    }
    if(table->symbol_ctr==MAXSYMBOLS)
    {
-      fprintf(stderr, "Symbol table overflow: Too many symbols in one context!\n");
+      fprintf(stderr, "Waaaay to many symbols in context :P !\n");
       exit(EXIT_FAILURE);
    }
    table->symbols[table->symbol_ctr].symbol = strdup(symbol);
@@ -127,7 +125,7 @@ void SymbolTablePrintLocal(FILE* out, SymbolTable_p st, TypeTable_p tt)
 
    for(i=0; i< st->symbol_ctr; i++)
    {
-      fprintf(out, "%-20s: ", st->symbols[i].symbol);
+      fprintf(out, "%-10s: ", st->symbols[i].symbol);
       TypePrint(out, tt, st->symbols[i].type);
       fprintf(out, "\n");
    }
@@ -138,7 +136,7 @@ void SymbolTablePrintGlobal(FILE* out, SymbolTable_p st, TypeTable_p tt)
 {
    if(st)
    {
-      fprintf(out, "-----------------------\n");
+      fprintf(out, "-----------New Recursive Print Layer------------\n");
       SymbolTablePrintLocal(out, st, tt);
       SymbolTablePrintGlobal(out, st->context, tt);
    }
