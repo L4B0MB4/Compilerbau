@@ -222,7 +222,7 @@ int main (int argc, char* argv[])
        //die schicht drunter ist, da wir die Liste nur in eine richtung verlinkt haben
        fprintf(stdout,"\n Types: \n");
        TypeTablePrint(stdout,tt);
-
+        
       if(printdot)
       {
          DOTASTPrint(stdout, ast);

@@ -8,7 +8,6 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
   bool res = true;
   int i;
-
   assert(st);
 
   if(ast)
@@ -42,8 +41,14 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
         SymbolTablePrintLocal(stdout,st,tt);
         st = STLeaveContext(st);
         break;
+    case assign:
+          if(!check_assign(st,ast))
+          {
+            printf("types do not suit\n");
+          }
+        break;
     default:
-        for(i = 0;i<ast->child[i];i++)
+        for(i = 0;ast->child[i];i++)
         {
             res = STBuildAllTables(st,tt,ast->child[i]) && res;
         }
@@ -53,6 +58,101 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
   return res;
 }
 
+
+bool check_assign(SymbolTable_p st, AST_p ast)
+{
+  SymbolTable_p tmp=st;
+  printf("ass %s\n",ast->child[0]->litval);
+  Symbol_p s =getSymbol(st,ast->child[0]->litval);
+  if(!s)
+  {
+    printf("%s not defined !!!",ast->child[0]->litval);
+    return false;
+  }
+  int vartype = s->type;
+  if(ast->child[1]->child[0])
+  {
+    return getExprType(st,ast->child[1],vartype);
+  }
+  else
+  {
+    Symbol_p sp =getSymbol(st,ast->child[1]->litval);
+    bool l =false;
+    if(vartype==2)
+    {
+        l =  ast->child[1]->type == t_INTLIT;
+    }
+    else if(vartype==1)
+    {
+        l =  ast->child[1]->type == t_STRINGLIT ;
+    }
+    else
+    {
+      printf("NO TYPE \n");
+      return false;
+    }
+    if(sp && !l)
+    {
+      l == sp->type == vartype;
+    }
+    return l;
+  }
+}
+
+bool getExprType(SymbolTable_p st, AST_p ast, int hasToBeType)
+{
+  //funcall abfangen
+  SymbolTable_p tmp=st;
+  printf("getexpr %s\n",ast->child[0]->litval);
+  Symbol_p s =getSymbol(st,ast->child[0]->litval);
+  if(!s)
+  {
+    printf("%s not defined !!!",ast->child[0]->litval);
+    return false;
+  }
+  int vartype = s->type;
+
+  if(ast->child[1]->child[0])
+  {
+    return getExprType(st,ast->child[1],vartype);
+  }
+  else
+  {
+    Symbol_p sp =getSymbol(st,ast->child[1]->litval);
+    bool l =false;
+    if(vartype==2)
+    {
+        l =  ast->child[1]->type == t_INTLIT;
+    }
+    else if(vartype==1)
+    {
+        l =  ast->child[1]->type == t_STRINGLIT ;
+    }
+    else
+    {
+      printf("NO TYPE \n");
+      return false;
+    }
+    if(sp && !l)
+    {
+      l == sp->type == vartype;
+    }
+    return l && vartype == hasToBeType;
+  }
+}
+
+Symbol_p getSymbol(SymbolTable_p st, char* symbol)
+{
+
+  SymbolTable_p tmp=st;
+  Symbol_p s=NULL;
+  while(!s&&tmp)
+  {
+    s =STFindSymbolLocal(tmp,symbol);
+    tmp = tmp->context;
+  }
+  return s;
+}
 
 bool st_insert_params(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
@@ -93,17 +193,30 @@ bool STInsertVar(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
   NanoTypeCell  type;
   type.constructor =tc_atomic;
+  int ttype;
    if(strcmp(ast->child[0]->litval,"Integer")==0)
   {
-    STInsertSymbol(st, ast->child[1]->litval, 2, 42, 42);
+    ttype = 2;
   }
   else if(strcmp(ast->child[0]->litval,"String")==0)
   {
-    STInsertSymbol(st, ast->child[1]->litval, 1, 42, 42);
+    ttype=1;
   }
   else
   {
-    STInsertSymbol(st, ast->child[1]->litval, 0, 42, 42);
+    ttype =0;
+  }
+  if(ast->child[1]->child[0])
+  {
+    int i=0;
+    for(i=0;ast->child[1]->child[i];i++)
+    {
+      STInsertSymbol(st, ast->child[1]->child[i]->litval, ttype, 42, 42);
+    }
+  }
+  else
+  {
+    STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
   }
   return true;
 }

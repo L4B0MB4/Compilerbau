@@ -60,6 +60,7 @@ typedef enum
    args,
    arglist,
    arg,
+   idlist,
    t_MULT,
    t_DIV,
    t_PLUS,
@@ -80,8 +81,7 @@ typedef enum
    t_RETURN,
    t_PRINT,
    t_dummy,
-   t_ELSE,
-   idlist
+   t_ELSE
 }ASTNodeType;
 
 #define MAXCHILD 5

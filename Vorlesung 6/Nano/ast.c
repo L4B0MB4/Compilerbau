@@ -58,6 +58,7 @@ char* ast_name[] =
    "args",
    "arglist",
    "arg",
+   "idlist",
    "t_MULT",
    "t_DIV",
    "t_PLUS",
@@ -78,6 +79,7 @@ char* ast_name[] =
    "t_RETURN",
    "t_PRINT",
    "t_dummy"
+   "t_ELSE"
 };
 
 /*---------------------------------------------------------------------*/
