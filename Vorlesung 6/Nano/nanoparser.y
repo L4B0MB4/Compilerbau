@@ -217,12 +217,10 @@ int main (int argc, char* argv[])
        SymbolTable_p st = SymbolTableAlloc();
        no_errors = STBuildAllTables(st,tt,ast);
        fprintf(stdout,"Global Symbols:\n");
-       SymbolTablePrintLocal(stdout,st,tt); // gibt nur oberste schicht an. was auch korrekt ist
-       //auch wenn PrintGlobal verwendet, nur oberste Schicht, weil wir nicht wissen wo
-       //die schicht drunter ist, da wir die Liste nur in eine richtung verlinkt haben
+       SymbolTablePrintLocal(stdout,st,tt);
        fprintf(stdout,"\n Types: \n");
        TypeTablePrint(stdout,tt);
-        
+    
       if(printdot)
       {
          DOTASTPrint(stdout, ast);

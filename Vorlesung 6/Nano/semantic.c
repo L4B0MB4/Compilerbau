@@ -42,10 +42,7 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
         st = STLeaveContext(st);
         break;
     case assign:
-          if(!check_assign(st,ast))
-          {
-            printf("types do not suit\n");
-          }
+        printf("assign result %d\n",check_assign(st,tt,ast));
         break;
     default:
         for(i = 0;ast->child[i];i++)
@@ -59,20 +56,83 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 }
 
 
-bool check_assign(SymbolTable_p st, AST_p ast)
+int check_assign(SymbolTable_p st,TypeTable_p tt, AST_p ast)
 {
-  SymbolTable_p tmp=st;
-  printf("ass %s\n",ast->child[0]->litval);
-  Symbol_p s =getSymbol(st,ast->child[0]->litval);
-  if(!s)
+  int vartype1 =-2;
+  int vartype2 = -2;
+  if(ast->child[0]->child[0])
   {
-    printf("%s not defined !!!",ast->child[0]->litval);
-    return false;
+    vartype1=check_assign(st,tt,ast->child[0]);
   }
-  int vartype = s->type;
+  else if (ast->child[0]->litval)
+  {
+    vartype1 = getType(st,tt,ast->child[0]);
+      printf("vartype 1 %d\n",vartype1);
+  }
+  if(vartype1>0)
+  {
+    if(ast->child[1]->child[0])
+    {
+      vartype2 = check_assign(st,tt,ast->child[1]);
+    }
+    else if (ast->child[1]->litval)
+    {
+      vartype2= getType(st,tt,ast->child[1]);
+      printf("vartype 2 %d\n",vartype2);
+    }
+    if(vartype2>0)
+    {
+      printf("vartype1 und 2 %d %d \n",vartype1,vartype2);
+    }
+    if(vartype1==vartype2)
+      return vartype1;
+    else 
+      return -1;
+  }
+  /*
+  SymbolTable_p tmp=st;
+  printf("litval %s \n",ast->child[0]->litval);
+  //es kann vorkommen ((i)+(i))+i) usw... immer unterstes element checken und hoch geben ... also vartype setzen?!
+  //if(!ast->child[0]->litval)return check_assign(st,ast->child[0]); 
+  int vartype=-2;
+  
+  if(ast->child[0]->child[0])
+  {
+    vartype = check_assign(st,ast->child[0]);
+  }
+  else
+  {
+      
+    Symbol_p s =getSymbol(st,ast->child[0]->litval);
+    if(!s)
+    {
+      if(ast->child[0]->type ==t_INTLIT)vartype =2;
+      else if(ast->child[0]->type==t_STRINGLIT)vartype=1;
+      if(!vartype)
+      {
+        printf("%s not defined !!!",ast->child[0]->litval);
+        return false;
+      }
+    }
+    if(!vartype)vartype = s->type;
+  }
+  printf("vartype: %d \n",vartype);
+
   if(ast->child[1]->child[0])
   {
-    return getExprType(st,ast->child[1],vartype);
+    if(check_assign(st,ast->child[1]) == vartype)
+    {
+      return vartype;
+    }
+      return -1;
+  }
+  else if(ast->child[0]->child[0])
+  {
+    if(check_assign(st,ast->child[0]) == vartype)
+    {
+      return vartype;
+    }
+      return -1;
   }
   else
   {
@@ -93,65 +153,48 @@ bool check_assign(SymbolTable_p st, AST_p ast)
     }
     if(sp && !l)
     {
-      l == sp->type == vartype;
+      l = sp->type == vartype;
     }
-    return l;
-  }
-}
-
-bool getExprType(SymbolTable_p st, AST_p ast, int hasToBeType)
-{
-  //funcall abfangen
-  SymbolTable_p tmp=st;
-  printf("getexpr %s\n",ast->child[0]->litval);
-  Symbol_p s =getSymbol(st,ast->child[0]->litval);
-  if(!s)
-  {
-    printf("%s not defined !!!",ast->child[0]->litval);
-    return false;
-  }
-  int vartype = s->type;
-
-  if(ast->child[1]->child[0])
-  {
-    return getExprType(st,ast->child[1],vartype);
-  }
-  else
-  {
-    Symbol_p sp =getSymbol(st,ast->child[1]->litval);
-    bool l =false;
-    if(vartype==2)
+    if(l)
     {
-        l =  ast->child[1]->type == t_INTLIT;
-    }
-    else if(vartype==1)
-    {
-        l =  ast->child[1]->type == t_STRINGLIT ;
+      return vartype;
     }
     else
-    {
-      printf("NO TYPE \n");
-      return false;
-    }
-    if(sp && !l)
-    {
-      l == sp->type == vartype;
-    }
-    return l && vartype == hasToBeType;
-  }
+      return -1;
+  }*/
 }
 
-Symbol_p getSymbol(SymbolTable_p st, char* symbol)
+int getType(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
-
-  SymbolTable_p tmp=st;
-  Symbol_p s=NULL;
-  while(!s&&tmp)
+  int retVal =-1;
+  if(ast->litval)
   {
-    s =STFindSymbolLocal(tmp,symbol);
-    tmp = tmp->context;
+
+    SymbolTable_p tmp=st;
+    Symbol_p s=NULL;
+    while(!s&&tmp)
+    {
+      s =STFindSymbolLocal(tmp,ast->litval);
+      tmp = tmp->context;
+    }
+    if(s)
+    {
+      if(s->type>2)
+      {
+        retVal = TypeTableGetRetType(tt,s->type);
+        printf("tyyyyype %s\n",ast->litval);
+        printf("tyyyyype %d\n",retVal);
+        return retVal;
+      }
+    }
+    if(s)return s->type;
   }
-  return s;
+  if(ast->type)
+  {
+    if(ast->type==t_INTLIT)retVal =2;
+    else if(ast->type==t_STRINGLIT) retVal =1;
+  }
+  return retVal;
 }
 
 bool st_insert_params(SymbolTable_p st, TypeTable_p tt, AST_p ast)
