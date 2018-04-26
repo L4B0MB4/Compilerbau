@@ -212,14 +212,17 @@ int main (int argc, char* argv[])
 
    if(res == 0)
    {
-       bool no_errors;
-       TypeTable_p tt = TypeTableAlloc();
-       SymbolTable_p st = SymbolTableAlloc();
-       no_errors = STBuildAllTables(st,tt,ast);
-       fprintf(stdout,"Global Symbols:\n");
-       SymbolTablePrintLocal(stdout,st,tt);
-       fprintf(stdout,"\n Types: \n");
-       TypeTablePrint(stdout,tt);
+       if(!printdot)
+       {
+        bool no_errors;
+        TypeTable_p tt = TypeTableAlloc();
+        SymbolTable_p st = SymbolTableAlloc();
+        no_errors = STBuildAllTables(st,tt,ast);
+        fprintf(stdout,"Global Symbols:\n");
+        SymbolTablePrintLocal(stdout,st,tt);
+        fprintf(stdout,"\n Types: \n");
+        TypeTablePrint(stdout,tt);
+       }
     
       if(printdot)
       {
