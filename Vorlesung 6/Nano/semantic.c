@@ -45,7 +45,7 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
         printf("assign result %d\n",check_assign(st,tt,ast));
         break;
     case funcall_stmt:
-        printf("assign result %d\n",check_funcallstmt(st,tt,ast->child[0]));
+        printf("funcall statement result %d\n",check_funcallstmt(st,tt,ast->child[0]));
         break;
     default:
         for(i = 0;ast->child[i];i++)
@@ -65,7 +65,6 @@ int check_funcallstmt(SymbolTable_p st,TypeTable_p tt, AST_p ast)
     Symbol_p s = getSymbol(st,ast->child[0]);
     if(s)
     {
-      printf("funcall typeindex %s\n",s->symbol);
       NanoTypeCell nt;
       nt.constructor = tc_function;
       nt.typeargno =1;
@@ -78,17 +77,7 @@ int check_funcallstmt(SymbolTable_p st,TypeTable_p tt, AST_p ast)
         nt.typeargs[nt.typeargno-1] = getType(st,tt,ast->child[1]);
       }
       nt.typeargno--;
-      printf("%d\n",nt.typeargs[0]);
-      printf("%d\n",nt.typeargs[1]);
-      printf("%d\n",nt.typeargs[2]);
-      printf("%d\n",nt.typeargs[3]);
-      printf("%d\n\n\n",nt.typeargno);
-      printf("%d\n",tt->types[s->type].typeargs[0]);
-      printf("%d\n",tt->types[s->type].typeargs[1]);
-      printf("%d\n",tt->types[s->type].typeargs[2]);
-      printf("%d\n",tt->types[s->type].typeargs[3]);
-      printf("%d\n",tt->types[s->type].typeargno);
-      printf("typecomp %d\n ",TypeCmp(&nt,&tt->types[s->type]));
+      return TypeCmp(&nt,&tt->types[s->type]);
     }
 }
 
@@ -117,7 +106,6 @@ int check_assign(SymbolTable_p st,TypeTable_p tt, AST_p ast)
   else if (ast->child[0]->litval)
   {
     vartype1 = getType(st,tt,ast->child[0]);
-      printf("vartype1 %d\n",vartype1);
   }
   if(ast->type==funcall)
   {
@@ -127,17 +115,11 @@ int check_assign(SymbolTable_p st,TypeTable_p tt, AST_p ast)
   {
     if(ast->child[1]->child[0])
     {
-      printf("hiiier\n");
       vartype2 = check_assign(st,tt,ast->child[1]);
     }
     else if (ast->child[1]->litval)
     {
       vartype2= getType(st,tt,ast->child[1]);
-      printf("vartype2 %d\n",vartype2);
-    }
-    if(vartype2>0)
-    {
-      printf("vartype1 und 2 %d %d \n",vartype1,vartype2);
     }
     if(vartype1==vartype2)
       return vartype1;
@@ -172,8 +154,6 @@ int getType(SymbolTable_p st, TypeTable_p tt, AST_p ast)
     if(s->type>2)
     {
       retVal = TypeTableGetRetType(tt,s->type);
-      printf("tyyyyype %s\n",ast->litval);
-      printf("tyyyyype %d\n",retVal);
       return retVal;
     }
   }
@@ -203,7 +183,6 @@ bool st_insert_params(SymbolTable_p st, TypeTable_p tt, AST_p past)
          switch(past->child[i]->child[0]->type)
          {
            case t_INTEGER:
-          printf("paraaaaaaaaaaam %s\n ",past->child[i]->child[1]->litval);
               STInsertSymbol(st,past->child[i]->child[1]->litval, 2, 42, 42);
               break;
            case t_STRING:
@@ -310,7 +289,6 @@ bool STInsertFunDef(SymbolTable_p st, TypeTable_p tt, AST_p ast)
      type.typeargs[type.typeargno]=0;
    }
    int no = TypeTableGetTypeIndex(tt, &type);
-   printf("nuuuuuummer %d\n",type.typeargno);
    STInsertSymbol(st, ast->child[1]->litval, no, 42, 42);
   return true;
 }

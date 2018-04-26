@@ -6,7 +6,7 @@ Integer hello(Integer repeat, String message, Integer test, Integer nochEinTest)
     while(i<repeat)
     {
         print message;
-        i = main()+i+i+i+i+1;
+        i = i+i+i+i+1;
     }
     return 0;
 }
@@ -15,7 +15,7 @@ String main()
 {
     if(1=1)
     {
-        hello(10, "Hello\n", 20);
+        hello(10, "Hello\n", 20, 21);
     }
     return 0;
 }
