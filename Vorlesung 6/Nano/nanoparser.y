@@ -167,7 +167,7 @@ args: /* empty */  {$$ = ASTEmptyAlloc();}
 ;
 
 arglist: expr {$$=ASTAlloc2(arglist,NULL,0,$1,NULL);}
-       | arglist COMA expr {$$=ASTAlloc2(args,NULL,0,$1,$3); ASTFree($2);}
+       | arglist COMA expr {$$=ASTAlloc2(arglist,NULL,0,$1,$3); ASTFree($2);}
 ;
 
 
