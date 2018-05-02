@@ -4,14 +4,16 @@ Integer test(Integer x)
     return 0;
 }
 
+
+
 String main()
 {
     Integer i;
-    i=1;
-    print i;
-    if(i=test(1))
+    i="1";
+    print "i";
+    if("j"=test(1))
     {
-        hello(10, "Hello\n", 20, 21);
+        hello(10, "Hello\n", 21);
     }
-    return 0;
+    print i;
 }

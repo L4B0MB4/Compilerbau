@@ -94,8 +94,12 @@ typedef struct astcell
    long        intval;
    struct astcell *child[MAXCHILD];
    SymbolTable_p context;
+   int yylineno;
+   int yycol;
 }ASTCell, *AST_p;
 
+extern int yylineno;
+extern int yycol;
 
 
 /*---------------------------------------------------------------------*/

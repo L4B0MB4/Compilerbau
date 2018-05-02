@@ -189,6 +189,7 @@ AST_p ASTEmptyAlloc(void)
 //
 /----------------------------------------------------------------------*/
 
+
 AST_p ASTAlloc(ASTNodeType type, char* litval, long intval, AST_p child0,
                AST_p child1, AST_p child2, AST_p child3)
 {
@@ -204,6 +205,8 @@ AST_p ASTAlloc(ASTNodeType type, char* litval, long intval, AST_p child0,
    ast->child[1] = child1;
    ast->child[2] = child2;
    ast->child[3] = child3;
+   ast->yylineno = yylineno;
+   ast->yycol = yycol;
    /* ASTCellPrint(ast); */
 
    return ast;

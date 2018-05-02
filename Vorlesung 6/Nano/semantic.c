@@ -63,19 +63,25 @@ int check_statements(SymbolTable_p st, TypeTable_p tt, AST_p ast)
       {
         int val = check_assign(st, tt, ast->child[i]);
         if (val == -1)
-          printf("there is something wrong with this assign\n");
-        else
-          printf("everything right with assign\n");
+          printf("error: line %d %d -> there is something wrong with this assign\n", ast->yylineno, ast->yycol);
       }
       else if (currentType == funcall_stmt)
       {
-        printf("funcall statement result %d\n", check_funcallstmt(st, tt, ast->child[i]->child[0]));
+        int ret = check_funcallstmt(st, tt, ast->child[i]->child[0]);
+        if (ret == -1)
+        {
+          printf("error: line %d %d -> funcall statement is incorrect\n", ast->yylineno, ast->yycol);
+        }
+        else if (ret == -2)
+        {
+          printf("error: line %d %d -> couldnt find function \n", ast->yylineno, ast->yycol);
+        }
       }
       else if (currentType == print_stmt)
       {
-        if(getType(st,tt,ast->child[i]->child[0]) !=1)
+        if (getType(st, tt, ast->child[i]->child[0]) != 1)
         {
-          printf("There is something wrong with this print statement\n");
+          printf("error: line %d %d -> There is something wrong with this print statement\n", ast->yylineno, ast->yycol);
         }
       }
       else if (currentType == ret_stmt)
@@ -86,9 +92,7 @@ int check_statements(SymbolTable_p st, TypeTable_p tt, AST_p ast)
       {
         int val = check_compare(st, tt, ast->child[i]);
         if (val == -1)
-          printf("there is something wrong with this compare \n");
-        else
-          printf("everything alright with this compare \n");
+          printf("error: line %d %d -> there is something wrong with this compare \n", ast->child[i]->child[0]->yylineno, ast->child[i]->child[0]->yycol);
       }
     }
   }
@@ -122,10 +126,14 @@ int check_funcallstmt(SymbolTable_p st, TypeTable_p tt, AST_p ast)
     }
     nt.typeargno--;
     if (TypeCmp(&nt, &tt->types[s->type]) == 0)
+    {
       return 0;
+    }
     else
       return -1;
   }
+  else
+    return -2;
 }
 
 void goThroughArgList(SymbolTable_p st, TypeTable_p tt, AST_p ast, NanoType_p nt)

@@ -19,12 +19,14 @@
    extern int yyerror(const char* err);
    extern int yylex(void);
    extern FILE *yyin;
+   extern int yycol;
+   extern int yylineno;
 
    AST_p ast;
 
    int yyerror(const char* err)
    {
-       printf("%s \n",err);
+       printf("Parse error line: %d %d  -> %s \n",yylineno,yycol,err);
        return 0;
    }
 %}
