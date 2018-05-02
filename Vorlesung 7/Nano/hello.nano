@@ -1,7 +1,7 @@
 
 Integer test(Integer x, Integer y)
 {
-    return 0;
+    return x+y;
 }
 
 
@@ -20,7 +20,7 @@ String main()
     }
     if(j<i)
     {
-        i= -i*2+i*3;
+        i= i*2+i*3 + test(10,12);
     }
     print i;
     print "Hallo miteinander";
