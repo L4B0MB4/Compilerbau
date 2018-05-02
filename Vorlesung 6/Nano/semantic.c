@@ -79,7 +79,8 @@ int check_statements(SymbolTable_p st, TypeTable_p tt, AST_p ast)
       }
       else if (currentType == print_stmt)
       {
-        if (getType(st, tt, ast->child[i]->child[0]) != 1)
+        int ttype = getType(st, tt, ast->child[i]->child[0]);
+        if (ttype <1)
         {
           printf("error: line %d %d -> There is something wrong with this print statement\n", ast->yylineno, ast->yycol);
         }
