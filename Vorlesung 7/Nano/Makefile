@@ -25,6 +25,10 @@ start:
 	clear
 	./compiled/compiled.exe
 
+graph:
+	make all
+	./semanticTables --dot hello.nano | dot -Txlib
+
 tags:
 	etags *.c *.h *.y *.l
 

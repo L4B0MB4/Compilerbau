@@ -19,3 +19,5 @@ void compileIdList(AST_p ast);
 void compileAssign(AST_p ast);
 void compilePrintStmt(AST_p ast);
 void compileExpression(AST_p ast);
+void compileStringCompare(AST_p ast);
+void compileBreakAndTabs();

@@ -9,6 +9,8 @@ char* atomic_type_possibilities[] =
 
 TypeTable_p tt;
 FILE* out;
+int bodyCounter =0;
+
 
 void compileMainMethod(SymbolTable_p st, TypeTable_p tt)
 {
@@ -50,7 +52,8 @@ void compileDeclarationType(TypeTable_p table, TypeIndex type, char* symbol)
             compileFunDefType(table->types[type].typeargs[i]);
             sep = ", ";
          }
-         fprintf(out,");\n");
+         fprintf(out,");");
+        compileBreakAndTabs();
          break;
    default:
          fprintf(out,"Oups unkown constructor!\n");
@@ -99,9 +102,13 @@ void switching(AST_p ast)
         compileCompare("if", ast);
         break;
     case body:
-        fprintf(out,"{\n");
+        fprintf(out,"{");
+        ++bodyCounter;
+        compileBreakAndTabs();
         compileRecursiveChildren(ast,tt);
-        fprintf(out,"}\n");
+        --bodyCounter;
+        fprintf(out,"}");
+        compileBreakAndTabs();
         break;
     case funcall:
         compileFunCall(ast);
@@ -134,7 +141,8 @@ void switching(AST_p ast)
     case ret_stmt:
         fprintf(out,"return ");
         switching(ast->child[0]);
-        fprintf(out,";\n");
+        fprintf(out,";");
+        compileBreakAndTabs();
         break;
     case t_PLUS:
     case t_MINUS:
@@ -179,14 +187,18 @@ void compilePrintStmt(AST_p ast)
         case t_INTLIT:
             fprintf(out,"printf(\"");
             fprintf(out,"%s",ast->child[0]->litval);
-            fprintf(out,"\");\n");
+            fprintf(out,"\");");
+            compileBreakAndTabs();
             fprintf(out,"printf(\"\\n\");");
+            compileBreakAndTabs();
             return;
         case t_STRINGLIT:
             fprintf(out,"printf(");
             fprintf(out," %s",ast->child[0]->litval);
-            fprintf(out,");\n");
+            fprintf(out,");");
+            compileBreakAndTabs();
             fprintf(out,"printf(\"\\n\");");
+            compileBreakAndTabs();
             return;
     }
     TypeIndex rettype;
@@ -203,8 +215,10 @@ void compilePrintStmt(AST_p ast)
         }
         fprintf(out,"\", ");
         switching(ast->child[0]);
-        fprintf(out,");\n");
+        fprintf(out,");");
+        compileBreakAndTabs();
         fprintf(out,"printf(\"\\n\");");
+        compileBreakAndTabs();
         return;
     }
     rettype = STSymbolReturnType(ast->context,tt,ast->child[0]->litval);
@@ -214,15 +228,18 @@ void compilePrintStmt(AST_p ast)
         case T_Integer:
             fprintf(out,"printf(\"%%d\",");
             fprintf(out,"N_%s",ast->child[0]->litval);
-            fprintf(out,");\n");
+            fprintf(out,");");
+            compileBreakAndTabs();
             fprintf(out,"printf(\"\\n\");");
+            compileBreakAndTabs();
             break;
         case T_String:
             fprintf(out,"printf(\"%%s\",");
             fprintf(out,"N_%s",ast->child[0]->litval);
-            fprintf(out,");\n");
+            fprintf(out,");");
+            compileBreakAndTabs();
             fprintf(out,"printf(\"\\n\");");
-
+            compileBreakAndTabs();
     }
 }
 
@@ -231,7 +248,8 @@ void compileAssign(AST_p ast)
     switching(ast->child[0]);
     fprintf(out,"= ");
     switching(ast->child[1]);
-    fprintf(out,";\n");
+    fprintf(out,";");
+    compileBreakAndTabs();
 }
 
 void compileVarDefs(AST_p ast)
@@ -249,7 +267,8 @@ void compileVarDefs(AST_p ast)
             else{
                 switching(ast->child[1]->child[1]);
             }
-            fprintf(out,";\n");
+            fprintf(out,";");
+            compileBreakAndTabs();
         }
         else if(ast->child[0]->type==nil){
             ast = ast->child[1];
@@ -261,7 +280,8 @@ void compileVarDefs(AST_p ast)
             else{
                 switching(ast->child[1]);
             }
-            fprintf(out,";\n");
+            fprintf(out,";");
+            compileBreakAndTabs();
         }
     }
 }
@@ -333,7 +353,8 @@ void compileFunCall(AST_p ast)
 void compileFunCallStmt(AST_p ast)
 {
     compileFunCall(ast->child[0]);
-    fprintf(out,";\n");
+    fprintf(out,";");
+    compileBreakAndTabs();
 }
 
 void compileArglist(AST_p ast)
@@ -367,19 +388,69 @@ void compileArglist(AST_p ast)
 
 void compileCompare(char *val, AST_p ast)
 {
-    fprintf(out,"\n%s", val);
+    compileBreakAndTabs();
+    fprintf(out,"%s", val);
     fprintf(out,"(");
-    switching(ast->child[0]->child[0]);
+    compileStringCompare(ast->child[0]->child[0]);
     switch (ast->child[0]->type)
     {
+
+    case t_NEQ:
+        fprintf(out," != ");
+        break;
+    case t_GEQ:
+        fprintf(out," >= ");
+        break;
+    case t_GT:
+        fprintf(out," > ");
+        break;
+    case t_LEQ:
+        fprintf(out," <= ");
+        break;
     case t_LT:
-        fprintf(out,"<");
+        fprintf(out," < ");
         break;
     case t_EQ:
-        fprintf(out,"==");
+        fprintf(out," == ");
         break;
     }
-    switching(ast->child[0]->child[1]);
+    compileStringCompare(ast->child[0]->child[1]);
     fprintf(out,")");
     switching(ast->child[1]);
+}
+
+void compileStringCompare(AST_p ast)
+{
+    if(ast->type==t_STRINGLIT || ast->type == t_IDENT)
+    {
+        int type =T_String;
+        if(ast->type == t_IDENT)
+        {
+            type =STFindSymbolLocal(ast->context,ast->litval)->type;
+        }
+        if(type==T_String)
+        {
+            fprintf(out,"strlen(");
+            switching(ast);
+            fprintf(out,")");
+        }
+        else
+        {
+            switching(ast);
+        }
+    }
+    else
+    {
+        switching(ast);
+    }
+}
+
+void compileBreakAndTabs()
+{
+    fprintf(out,"\n");
+    int i =0;
+    for(i=0;i<bodyCounter;i++)
+    {
+        fprintf(out,"\t");
+    }
 }
