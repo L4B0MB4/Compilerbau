@@ -158,6 +158,7 @@ void compileExpression(AST_p ast)
     {
         fprintf(out, "-");
         switching(ast->child[0]);
+        fprintf(out, ")");
         return;
     }
     switching(ast->child[0]);

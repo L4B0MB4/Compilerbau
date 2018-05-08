@@ -18,10 +18,10 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
     case vardef:
       res = STBuildAllTables(st, tt, ast->child[0]) && res; // Typ der Var
       res = STBuildAllTables(st, tt, ast->child[1]) && res; //Name der Var
-      res = STInsertVar(st, tt, ast) && res; // hinzufügen der Variable in die Symboltabelle
+      res = STInsertVar(st, tt, ast) && res;                // hinzufügen der Variable in die Symboltabelle
       break;
     case fundef:
-      res = STInsertFunDef(st, tt, ast) && res;// hinzufügen der Funktion in die Symboltabelle
+      res = STInsertFunDef(st, tt, ast) && res; // hinzufügen der Funktion in die Symboltabelle
       res = STBuildAllTables(st, tt, ast->child[0]) && res;
       res = STBuildAllTables(st, tt, ast->child[1]) && res;
       st = STEnterContext(st);
@@ -80,7 +80,7 @@ int check_statements(SymbolTable_p st, TypeTable_p tt, AST_p ast)
       else if (currentType == print_stmt)
       {
         int ttype = getType(st, tt, ast->child[i]->child[0]);
-        if (ttype <1)
+        if (ttype < 1)
         {
           printf("error: line %d %d -> There is something wrong with this print statement\n", ast->yylineno, ast->yycol);
         }
@@ -170,13 +170,18 @@ int check_assign(SymbolTable_p st, TypeTable_p tt, AST_p ast)
   }
   if (vartype1 > 0)
   {
-    if (ast->child[1]->child[0])
+    if (ast->child[1])
     {
-      vartype2 = check_assign(st, tt, ast->child[1]);
+      if (ast->child[1]->child[0])
+      {
+        vartype2 = check_assign(st, tt, ast->child[1]);
+      }
+      if (ast->child[1]->litval)
+        vartype2 = getType(st, tt, ast->child[1]);
     }
-    else if (ast->child[1]->litval)
+    else // unariy minus 
     {
-      vartype2 = getType(st, tt, ast->child[1]);
+      return vartype1;
     }
     if (vartype1 == vartype2)
       return vartype1;
@@ -284,7 +289,7 @@ bool STInsertVar(SymbolTable_p st, TypeTable_p tt, AST_p ast)
   if (ast->child[1]->child[0])
   {
     int i = 0;
-    insertIdList(ttype,st,tt,ast->child[1]);
+    insertIdList(ttype, st, tt, ast->child[1]);
   }
   else
   {
@@ -293,15 +298,15 @@ bool STInsertVar(SymbolTable_p st, TypeTable_p tt, AST_p ast)
   return true;
 }
 
-
-void insertIdList(int ttype, SymbolTable_p st, TypeTable_p tt,AST_p ast)
+void insertIdList(int ttype, SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
-  if(ast->child[0]->type==idlist)
+  if (ast->child[0]->type == idlist)
   {
-    insertIdList(ttype,st,tt,ast->child[0]);
+    insertIdList(ttype, st, tt, ast->child[0]);
     STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
   }
-  else{
+  else
+  {
     STInsertSymbol(st, ast->child[0]->litval, ttype, 42, 42);
     STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
   }
