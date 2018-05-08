@@ -20,7 +20,7 @@ start:
 	make all
 	rm -r compiled
 	mkdir compiled
-	./semanticTables hello.nano ./compiled/compiled.c
+	./semanticTables test.nano ./compiled/compiled.c
 	gcc ./compiled/compiled.c -o ./compiled/compiled.exe
 	clear
 	./compiled/compiled.exe
