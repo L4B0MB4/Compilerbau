@@ -284,16 +284,27 @@ bool STInsertVar(SymbolTable_p st, TypeTable_p tt, AST_p ast)
   if (ast->child[1]->child[0])
   {
     int i = 0;
-    for (i = 0; ast->child[1]->child[i]; i++)
-    {
-      STInsertSymbol(st, ast->child[1]->child[i]->litval, ttype, 42, 42);
-    }
+    insertIdList(ttype,st,tt,ast->child[1]);
   }
   else
   {
     STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
   }
   return true;
+}
+
+
+void insertIdList(int ttype, SymbolTable_p st, TypeTable_p tt,AST_p ast)
+{
+  if(ast->child[0]->type==idlist)
+  {
+    insertIdList(ttype,st,tt,ast->child[0]);
+    STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
+  }
+  else{
+    STInsertSymbol(st, ast->child[0]->litval, ttype, 42, 42);
+    STInsertSymbol(st, ast->child[1]->litval, ttype, 42, 42);
+  }
 }
 
 bool insertParamsFunDef(SymbolTable_p st, TypeTable_p tt, AST_p past, NanoType_p nt)
