@@ -326,6 +326,11 @@ void compileParams(AST_p ast)
                 fprintf(out,", ");
             }
         }
+        else if(ast->child[0]->type == param  && !ast->child[1])
+        {
+            switching(ast->child[0]->child[0]);
+            switching(ast->child[0]->child[1]);            
+        }
         else
         {
             switching(ast->child[0]->child[0]);
