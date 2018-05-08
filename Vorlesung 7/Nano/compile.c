@@ -437,6 +437,15 @@ void compileCompare(char *val, AST_p ast)
     compileStringCompare(ast->child[0]->child[1]);
     fprintf(out, ")");
     switching(ast->child[1]);
+    if(ast->type==if_stmt)
+    {
+        if(ast->child[2])
+        {
+            compileBreakAndTabs();
+            fprintf(out,"else");
+            switching(ast->child[2]);
+        }
+    }
 }
 
 void compileStringCompare(AST_p ast)

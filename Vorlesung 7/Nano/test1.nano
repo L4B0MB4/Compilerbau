@@ -9,5 +9,13 @@ Integer main()
    a = ---1+2*3-4;
    b = -1+2;
    c = -4*5;
+   if(a=1)
+   {
+       print "hier";
+   }
+   else
+   {
+       print "daaaa";
+   }
    return 0;
 }
