@@ -10,7 +10,7 @@ char* possible_atomic_types[] =
    "Integer"
 };
 
-
+// vergleicht Typen
 int TypeCmp(NanoType_p t1, NanoType_p t2)
 {
    int res, i;
@@ -37,7 +37,7 @@ int TypeCmp(NanoType_p t1, NanoType_p t2)
 }
 
 
-
+//printet types
 void TypePrint(FILE* out, TypeTable_p table, TypeIndex type)
 {
    int i;
@@ -67,7 +67,7 @@ void TypePrint(FILE* out, TypeTable_p table, TypeIndex type)
 }
 
 
-// Inserts atomic types
+// Fügt die atomaren Typen zur TypeTable hinzu (Integer,String und NoType)
 void TypeTableInit(TypeTable_p table)
 {
    NanoTypeCell type;
@@ -86,7 +86,7 @@ void TypeTableInit(TypeTable_p table)
 }
 
 
-
+// Neue TypeTable allokieren
 TypeTable_p  TypeTableAlloc()
 {
    TypeTable_p handle;
@@ -103,6 +103,7 @@ void TypeTableFree(TypeTable_p junk)
    TypeTableCellFree(junk);
 }
 
+//Darstellung eines Types durch Zahlnwert
 void TypeTablePrint(FILE* out, TypeTable_p table)
 {
    int i;
@@ -115,6 +116,7 @@ void TypeTablePrint(FILE* out, TypeTable_p table)
    }
 }
 
+//Einfügen eienes neuen Types in die TypeTable
 TypeIndex TypeTableInsert(TypeTable_p table, NanoType_p type)
 {
    if(table->type_ctr==MAXTYPES)

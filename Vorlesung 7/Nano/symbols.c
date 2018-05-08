@@ -29,7 +29,7 @@ void SymbolTableFree(SymbolTable_p junk)
    SymbolTableCellFree(junk);
 }
 
-
+//in den nächst höheren Scope
 SymbolTable_p STEnterContext(SymbolTable_p table)
 {
    SymbolTable_p handle = SymbolTableAlloc();
@@ -46,7 +46,7 @@ SymbolTable_p STLeaveContext(SymbolTable_p table)
 }
 
 
-
+// Finde Typ in lokaler Symboltabelle
 Symbol_p STFindSymbolLocal(SymbolTable_p table, char* symbol)
 {
    int i;
@@ -79,7 +79,7 @@ Symbol_p STFindSymbolGlobal(SymbolTable_p table, char* symbol)
    return res;
 }
 
-
+// return type einer funktion
 TypeIndex STSymbolReturnType(SymbolTable_p table, TypeTable_p tt, char* symbol)
 {
    Symbol_p entry = STFindSymbolGlobal(table, symbol);

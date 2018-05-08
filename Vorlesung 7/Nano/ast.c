@@ -1,32 +1,5 @@
-/*-----------------------------------------------------------------------
-
-File  : ast.c
-
-Author: Stephan Schulz (schulz@eprover.org)
-
-Contents
-
-  Implementation of an abstract syntax tree type.
-
-  Copyright 2015-2017 by the author.
-  This code is released under the GNU General Public Licence.
-
-Changes
-
-<1> Tue Mar 31 18:39:18 CEST 2015
-    New
-<2> Mon Mar 28 23:37:01 CEST 2016
-    Update, add ASTFree()
-
------------------------------------------------------------------------*/
 
 #include "ast.h"
-
-
-
-/*---------------------------------------------------------------------*/
-/*                        Global Variables                             */
-/*---------------------------------------------------------------------*/
 
 long nodectr=0;
 
@@ -82,28 +55,6 @@ char* ast_name[] =
    "t_ELSE"
 };
 
-/*---------------------------------------------------------------------*/
-/*                      Forward Declarations                           */
-/*---------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------*/
-/*                         Internal Functions                          */
-/*---------------------------------------------------------------------*/
-
-/*-----------------------------------------------------------------------
-//
-// Function: dot_print_child()
-//
-//   Print a link from father node to child node, then print the
-//   subtree corresponding to the child in DOT syntax.
-//
-// Global Variables: -
-//
-// Side Effects    : Output
-//
-/----------------------------------------------------------------------*/
-
 static void dot_print_child(FILE* out, AST_p father, AST_p child)
 {
    if(child)
@@ -112,14 +63,6 @@ static void dot_print_child(FILE* out, AST_p father, AST_p child)
       DOTASTNodePrint(out, child);
    }
 }
-
-
-/*---------------------------------------------------------------------*/
-/*                         Exported Functions                          */
-/*---------------------------------------------------------------------*/
-
-
-
 
 /*-----------------------------------------------------------------------
 //

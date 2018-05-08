@@ -16,16 +16,16 @@ bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
     switch (ast->type)
     {
     case vardef:
-      res = STBuildAllTables(st, tt, ast->child[0]) && res;
-      res = STBuildAllTables(st, tt, ast->child[1]) && res;
-      res = STInsertVar(st, tt, ast) && res;
+      res = STBuildAllTables(st, tt, ast->child[0]) && res; // Typ der Var
+      res = STBuildAllTables(st, tt, ast->child[1]) && res; //Name der Var
+      res = STInsertVar(st, tt, ast) && res; // hinzufügen der Variable in die Symboltabelle
       break;
     case fundef:
-      res = STInsertFunDef(st, tt, ast) && res;
+      res = STInsertFunDef(st, tt, ast) && res;// hinzufügen der Funktion in die Symboltabelle
       res = STBuildAllTables(st, tt, ast->child[0]) && res;
       res = STBuildAllTables(st, tt, ast->child[1]) && res;
       st = STEnterContext(st);
-      res = st_insert_params(st, tt, ast->child[2]) && res;
+      res = st_insert_params(st, tt, ast->child[2]) && res; //hinzufügen der Parameter in die Symboltabelle
       res = STBuildAllTables(st, tt, ast->child[2]) && res;
       res = STBuildAllTables(st, tt, ast->child[3]) && res;
       st = STLeaveContext(st);
