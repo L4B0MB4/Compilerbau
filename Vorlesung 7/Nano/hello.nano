@@ -1,7 +1,7 @@
 
 Integer test(Integer x, Integer y)
 {
-    return 0;
+    return x+y;
 }
 
 
@@ -10,19 +10,24 @@ String main()
 {
     Integer x;
     Integer i,j;
+    String abc;
     i=1;
     print "i";
     print i;
     print test(1,2);
+    abc="a";
     if(j=test(1,2))
     {
         test(10,12);
     }
     if(j<i)
     {
-        i= -i*2+i*3;
+        i= i*2+i*3 + test(10,12);
+    }
+    if(abc>="b")
+    {
+        print "test";
     }
     print i;
-    print "Hallo miteinander";
     return "hallo";
 }
