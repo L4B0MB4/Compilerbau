@@ -16,6 +16,7 @@ char* N_StrCat(char* str1, char* str2)
 }
 int N_StrToInt(char* str)
 {
+    if(strlen(str)<1) return 0;
     return atoi(str);
 }
 char* N_IntToStr(int i)
@@ -24,3 +25,4 @@ char* N_IntToStr(int i)
     sprintf(ptr,"%d",i);
     return ptr;
 }
+

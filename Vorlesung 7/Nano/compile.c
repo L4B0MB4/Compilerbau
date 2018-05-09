@@ -25,7 +25,7 @@ void writeLibToFile(FILE* out)
 
 void compileMainMethod(SymbolTable_p st, TypeTable_p tt)
 {
-    fprintf(out, "int main(char argc, char** argv){ N_main();}");
+    fprintf(out, "int main(char argc, char** argv){ if(argc==2){N_main(argv[1],\"\");}else if(argc>2){N_main(argv[1],argv[2]);  }else{N_main(\"\",\"\"); }}");
 }
 
 void compileSetup(FILE *oout)
@@ -397,9 +397,14 @@ void compileArglist(AST_p ast)
         {
             fprintf(out, ", %s", ast->child[1]->litval);
         }
+        else if(type==funcall)
+        {
+            fprintf(out, ",");
+            switching(ast->child[1]);
+        }
         else
         {
-            fprintf(out, ", %s", ast->child[1]->litval);
+            fprintf(out, ", N_%s", ast->child[1]->litval);
         }
     }
     else if (ptype == t_DIV || ptype == t_MINUS || ptype == t_PLUS || ptype == t_MULT)
@@ -413,9 +418,13 @@ void compileArglist(AST_p ast)
         {
             fprintf(out, "%s", ast->child[0]->litval);
         }
+        else if(type==funcall)
+        {
+            switching(ast->child[0]);
+        }
         else
         {
-            fprintf(out, "%s", ast->child[0]->litval);
+            fprintf(out, "N_%s", ast->child[0]->litval);
         }
     }
 }

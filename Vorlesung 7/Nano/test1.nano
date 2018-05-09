@@ -15,8 +15,8 @@ Integer Euklid(Integer a, Integer b)
 }
 
 
-Integer main()
+Integer main(String arg1, String arg2)
 {
-   print StrCat("hallo", "\n");
+   print StrCat(IntToStr(Euklid(StrToInt(arg1), StrToInt(arg2))), "\n");
    return 0;
 }
