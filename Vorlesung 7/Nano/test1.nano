@@ -1,0 +1,22 @@
+Integer Euklid(Integer a, Integer b)
+{
+   while(a != b)
+   {
+      if(a > b)
+      {
+         a = a---b;
+      }
+      else
+      {
+         b = b-a;
+      }
+   }
+   return a;
+}
+
+
+Integer main()
+{
+   print StrCat("hallo", "\n");
+   return 0;
+}

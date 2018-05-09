@@ -65,6 +65,7 @@ ID         {ALPHA}{ALNUM}*
 Integer {yylval->type = t_INTEGER;return INTEGER;}
 String  {yylval->type = t_STRING;return STRING;}
 if      {return IF;}
+else    {return ELSE;}
 while   {return WHILE;}
 return  {return RETURN;}
 print   {return PRINT;}
@@ -125,7 +126,8 @@ char* tokname[] =
    "WHILE",
    "RETURN",
    "PRINT",
-   "ERROR"
+   "ERROR",
+   "ELSE"
 };
 
 

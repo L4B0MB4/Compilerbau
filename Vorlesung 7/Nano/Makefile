@@ -20,14 +20,14 @@ start:
 	make all
 	rm -r compiled
 	mkdir compiled
-	./semanticTables test.nano ./compiled/compiled.c
+	./semanticTables test1.nano ./compiled/compiled.c
 	gcc ./compiled/compiled.c -o ./compiled/compiled.exe
 	
 	./compiled/compiled.exe
 
 graph:
 	make all
-	./semanticTables --dot hello.nano | dot -Txlib
+	./semanticTables --dot test1.nano | dot -Txlib
 
 tags:
 	etags *.c *.h *.y *.l
