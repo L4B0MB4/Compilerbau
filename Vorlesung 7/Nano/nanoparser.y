@@ -229,12 +229,14 @@ int main (int argc, char* argv[])
         bool no_errors;
         TypeTable_p tt = TypeTableAlloc();
         SymbolTable_p st = SymbolTableAlloc();
+        STBuildLibFunctions( st);
         no_errors = STBuildAllTables(st,tt,ast);
         fprintf(stdout,"Global Symbols:\n");
         SymbolTablePrintLocal(stdout,st,tt);
         fprintf(stdout,"\n Types: \n");
         TypeTablePrint(stdout,tt);
         fprintf(stdout,"\n\n");
+        writeLibToFile(out);
         compileSetup(out);
         compileDeclarations(st,tt);
         compileRecursiveChildren(ast,tt);

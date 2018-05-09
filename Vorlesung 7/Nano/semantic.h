@@ -11,3 +11,6 @@ bool insertParamsFunDef(SymbolTable_p st,TypeTable_p tt, AST_p past, NanoType_p 
 int check_statements(SymbolTable_p st, TypeTable_p tt, AST_p ast);
 int check_compare(SymbolTable_p st, TypeTable_p tt, AST_p ast);
 void insertIdList(int ttype, SymbolTable_p st, TypeTable_p tt,AST_p ast);
+
+
+void STBuildLibFunctions(SymbolTable_p st);

@@ -21,3 +21,6 @@ void compilePrintStmt(AST_p ast);
 void compileExpression(AST_p ast);
 void compileStringCompare(AST_p ast);
 void compileBreakAndTabs();
+
+
+void writeLibToFile(FILE* out);

@@ -83,6 +83,22 @@ void TypeTableInit(TypeTable_p table)
 
    type.typeargs[0] = T_Integer;
    TypeTableInsert(table, &type);
+
+   type.constructor =tc_function;
+   type.typeargno = 3;
+   type.typeargs[0]=T_String;
+   type.typeargs[1]=T_String;
+   type.typeargs[2]=T_String;
+   TypeTableInsert(table, &type); //strcat
+   type.typeargno = 2;
+   type.typeargs[0]=T_String;
+   type.typeargs[1]=T_Integer;
+   TypeTableInsert(table, &type);//intostr
+   type.typeargs[0]=T_Integer;
+   type.typeargs[1]=T_String;
+   TypeTableInsert(table, &type);//strtoint
+   
+   
 }
 
 

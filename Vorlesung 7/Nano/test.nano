@@ -31,6 +31,7 @@ Integer main()
    print fibrek(10);
    print "\nIterativ: ";
    print fibit(10);
+   print StrCat("hallo","tschüss");
    print "\n";
    return 0;
 }

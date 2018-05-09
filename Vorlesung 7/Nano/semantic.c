@@ -4,6 +4,14 @@
 #include "symbols.h"
 #include "semantic.h"
 
+void STBuildLibFunctions(SymbolTable_p st)
+{
+  STInsertSymbol(st,"StrCat", 3, 42, 42);
+  STInsertSymbol(st,"IntToStr", 4, 42, 42);
+  STInsertSymbol(st,"StrToInt", 5, 42, 42);
+}
+
+
 bool STBuildAllTables(SymbolTable_p st, TypeTable_p tt, AST_p ast)
 {
   bool res = true;

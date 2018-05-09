@@ -22,7 +22,7 @@ start:
 	mkdir compiled
 	./semanticTables test.nano ./compiled/compiled.c
 	gcc ./compiled/compiled.c -o ./compiled/compiled.exe
-	clear
+	
 	./compiled/compiled.exe
 
 graph:

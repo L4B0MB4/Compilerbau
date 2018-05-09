@@ -10,6 +10,19 @@ TypeTable_p tt;
 FILE *out;
 int bodyCounter = 0;
 
+
+void writeLibToFile(FILE* out)
+{
+    int c;
+    FILE *file;
+    file = fopen("nanostring.lib.c", "r");
+    if (file) {
+        while ((c = getc(file)) != EOF)
+            fprintf(out,"%c",c);
+        fclose(file);
+    }
+}
+
 void compileMainMethod(SymbolTable_p st, TypeTable_p tt)
 {
     fprintf(out, "int main(char argc, char** argv){ N_main();}");
@@ -22,7 +35,6 @@ void compileSetup(FILE *oout)
 
 void compileDeclarations(SymbolTable_p st, TypeTable_p table)
 {
-    fprintf(out, "#include <stdio.h>\n");
     if (!tt)
         tt = table;
     int i;
@@ -41,6 +53,7 @@ void compileDeclarationType(TypeTable_p table, TypeIndex type, char *symbol)
     switch (table->types[type].constructor)
     {
     case tc_function:
+    if(strcmp(symbol,"StrCat")==0 || strcmp(symbol,"IntToStr")==0 || strcmp(symbol,"StrToInt")==0)break;
         compileFunDefType(table->types[type].typeargs[0]);
         fprintf(out, " N_%s (", symbol);
         for (i = 1; i < table->types[type].typeargno; i++)
@@ -359,7 +372,8 @@ void compileRecursiveParent(AST_p ast)
 
 void compileFunCall(AST_p ast)
 {
-    fprintf(out, " N_%s(", ast->child[0]->litval);
+    char * litval = ast->child[0]->litval;
+    fprintf(out, " N_%s(", litval);
     compileArglist(ast->child[1]);
     fprintf(out, ")");
 }
